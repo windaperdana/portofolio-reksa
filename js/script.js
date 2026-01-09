@@ -9,6 +9,130 @@ AOS.init({
 // DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
     
+    // Theme Management
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+    
+    // Check for saved theme preference or default to system preference
+    const savedTheme = localStorage.getItem('theme');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const currentTheme = savedTheme || (systemDark ? 'dark' : 'light');
+    
+    // Apply the current theme
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            body.setAttribute('data-theme', 'dark');
+            themeIcon.className = 'bi bi-moon-fill';
+            localStorage.setItem('theme', 'dark');
+        } else {
+            body.removeAttribute('data-theme');
+            themeIcon.className = 'bi bi-sun-fill';
+            localStorage.setItem('theme', 'light');
+        }
+    }
+    
+    // Initialize theme
+    setTheme(currentTheme);
+    
+    // Theme toggle event listener
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+        
+        // Add a subtle animation to the toggle
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+        }, 150);
+    });
+    
+    // Listen for system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+            setTheme(e.matches ? 'dark' : 'light');
+        }
+    });
+
+    // CV Export Functionality
+    const exportCVButton = document.getElementById('exportCV');
+    
+    if (exportCVButton) {
+        exportCVButton.addEventListener('click', function() {
+            exportToPDF();
+        });
+    }
+    
+    function exportToPDF() {
+        const button = document.getElementById('exportCV');
+        const buttonText = button.innerHTML;
+        
+        // Show loading state
+        button.classList.add('loading');
+        button.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Generating...';
+        button.disabled = true;
+        
+        // Get the CV template
+        const element = document.getElementById('cv-template');
+        
+        // Clone the element to avoid modifying the original
+        const clonedElement = element.cloneNode(true);
+        clonedElement.style.display = 'block';
+        
+        // Temporarily add to body for html2pdf
+        document.body.appendChild(clonedElement);
+        
+        // Configure html2pdf options
+        const opt = {
+            margin: [0.5, 0.5, 0.5, 0.5], // top, left, bottom, right (in inches)
+            filename: 'I PUTU REKSA WINDA PERDANA - Resume.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { 
+                scale: 2,
+                useCORS: true,
+                letterRendering: true,
+                allowTaint: false
+            },
+            jsPDF: { 
+                unit: 'in', 
+                format: 'a4', 
+                orientation: 'portrait',
+                compress: true
+            },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        };
+        
+        // Generate PDF
+        html2pdf().set(opt).from(clonedElement).save().then(function() {
+            // Remove cloned element
+            document.body.removeChild(clonedElement);
+            
+            // Reset button state
+            button.classList.remove('loading');
+            button.innerHTML = buttonText;
+            button.disabled = false;
+            
+            // Show success notification
+            showNotification('CV exported successfully as PDF!', 'success');
+        }).catch(function(error) {
+            console.error('PDF generation error:', error);
+            
+            // Remove cloned element
+            if (document.body.contains(clonedElement)) {
+                document.body.removeChild(clonedElement);
+            }
+            
+            // Reset button state
+            button.classList.remove('loading');
+            button.innerHTML = buttonText;
+            button.disabled = false;
+            
+            // Show error notification
+            showNotification('Failed to export CV. Please try again.', 'error');
+        });
+    }
+    
     // Navbar scroll effect
     const navbar = document.getElementById('navbar');
     const navLinks = document.querySelectorAll('.nav-link');
@@ -22,6 +146,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     window.addEventListener('scroll', updateNavbar);
+    
+    // Smooth scrolling for all anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                const offsetTop = targetSection.offsetTop - 80;
+                
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
     
     // Smooth scrolling for navigation links
     navLinks.forEach(link => {
@@ -474,4 +616,50 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', throttledUpdateParallax);
     
     console.log('🚀 Portfolio website loaded successfully!');
+    console.log(`🎨 Current theme: ${body.getAttribute('data-theme') || 'light'}`);
+    
+    // Add theme transition indicator
+    function showThemeTransition() {
+        const indicator = document.createElement('div');
+        indicator.innerHTML = `<i class="bi bi-${body.getAttribute('data-theme') === 'dark' ? 'moon-fill' : 'sun-fill'}"></i>`;
+        indicator.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: var(--gradient-primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            z-index: 10000;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-hover);
+        `;
+        
+        document.body.appendChild(indicator);
+        
+        setTimeout(() => {
+            indicator.style.transform = 'translate(-50%, -50%) scale(1)';
+        }, 10);
+        
+        setTimeout(() => {
+            indicator.style.transform = 'translate(-50%, -50%) scale(0)';
+            setTimeout(() => {
+                if (indicator.parentNode) {
+                    indicator.parentNode.removeChild(indicator);
+                }
+            }, 300);
+        }, 800);
+    }
+    
+    // Update theme toggle to show transition
+    const originalThemeToggle = themeToggle.onclick;
+    themeToggle.addEventListener('click', function() {
+        showThemeTransition();
+    });
 });

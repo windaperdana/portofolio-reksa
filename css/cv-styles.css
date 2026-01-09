@@ -1,0 +1,242 @@
+/* CV Template Styles for PDF Export */
+.cv-template {
+    background: white;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    max-width: 210mm;
+    margin: 0 auto;
+}
+
+.cv-container {
+    padding: 20mm;
+}
+
+.cv-header {
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.cv-personal-info h1 {
+    color: #667eea;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.cv-title {
+    font-size: 1.3rem;
+    color: #666;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.cv-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.cv-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #555;
+}
+
+.cv-contact-item i {
+    color: #667eea;
+    font-size: 0.9rem;
+}
+
+.cv-section {
+    margin-bottom: 35px;
+}
+
+.cv-section h2 {
+    color: #667eea;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: bold;
+}
+
+.cv-skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.cv-skill-category h3 {
+    color: #333;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.cv-skill-category p {
+    color: #666;
+    margin-bottom: 0;
+}
+
+.cv-experience-item {
+    margin-bottom: 25px;
+}
+
+.cv-experience-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.cv-experience-header h3 {
+    color: #333;
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.cv-date {
+    color: #667eea;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.cv-company {
+    color: #666;
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.cv-experience-item p {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.cv-experience-item ul {
+    margin-bottom: 10px;
+    padding-left: 20px;
+}
+
+.cv-experience-item li {
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.cv-tech {
+    color: #667eea;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.cv-stats {
+    display: flex;
+    gap: 40px;
+}
+
+.cv-stat-item {
+    text-align: center;
+    color: #555;
+}
+
+.cv-stat-item strong {
+    color: #667eea;
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Export CV Button Styling */
+#exportCV {
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+#exportCV:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+#exportCV i {
+    transition: transform 0.3s ease;
+}
+
+#exportCV:hover i {
+    transform: translateY(-2px);
+}
+
+/* Loading state for export button */
+#exportCV.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+#exportCV.loading i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Mobile Responsive CV Styles */
+@media (max-width: 768px) {
+    .cv-skills-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .cv-experience-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .cv-date {
+        margin-top: 5px;
+    }
+    
+    .cv-stats {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .cv-contact {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .cv-personal-info h1 {
+        font-size: 2rem;
+    }
+    
+    .cv-container {
+        padding: 15mm;
+    }
+}
+
+/* Export button mobile responsiveness */
+@media (max-width: 992px) {
+    #exportCV {
+        margin-left: 0.5rem;
+        margin-top: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    #exportCV {
+        width: 100%;
+        margin: 0.5rem 0;
+        text-align: center;
+    }
+}

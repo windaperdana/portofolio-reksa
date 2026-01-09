@@ -14,8 +14,12 @@
     <!-- AOS Animation Library -->
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     
+    <!-- html2pdf Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/cv-styles.css">
 </head>
 <body>
     
@@ -48,6 +52,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light ms-2" id="exportCV" aria-label="Export CV as PDF">
+                            <i class="bi bi-download me-1"></i>Export CV
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="theme-toggle btn btn-outline-light ms-2" id="themeToggle" aria-label="Toggle dark/light mode">
+                            <i class="bi bi-sun-fill" id="themeIcon"></i>
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -68,6 +82,7 @@
                         <p class="hero-description mb-4">
                             My experience includes transitioning from monolithic systems to microservices, where I managed data flows between services using RabbitMQ and optimized data access speed with Redis. I'm also very familiar with complex data management in PostgreSQL, MySQL, and MongoDB. One of my specific areas of expertise is real-time processing, where data speed and accuracy are top priorities. I really enjoy the challenge of building backend infrastructure that can handle high traffic consistently.
                         </p>
+                        
                         <!-- <div class="hero-buttons">
                             <a href="#projects" class="btn btn-primary btn-lg me-3" onclick="document.getElementById('projects').scrollIntoView({behavior: 'smooth'});">
                                 View My Work
@@ -89,7 +104,7 @@
                 <div class="col-lg-6" data-aos="fade-left">
                     <div class="hero-image">
                         <div class="image-container">
-                            <img src="Pas foto.jpeg" alt="Profile" class="img-fluid rounded-circle profile-img">
+                            <img src="Pas foto.jpeg" alt="Profile" class="img-fluid rounded-circle profile-img" loading="lazy">
                             <div class="floating-shapes">
                                 <div class="shape shape-1"></div>
                                 <div class="shape shape-2"></div>
@@ -143,7 +158,7 @@
                 <div class="col-lg-6" data-aos="fade-left">
                     <div class="about-image">
                         <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=400&fit=crop" 
-                             alt="About" class="img-fluid rounded-3">
+                             alt="About" class="img-fluid rounded-3" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -483,7 +498,7 @@
                     <div class="project-card">
                         <div class="project-image">
                             <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop" 
-                                 alt="E-commerce Platform" class="img-fluid">
+                                 alt="E-commerce Platform" class="img-fluid" loading="lazy">
                             <div class="project-overlay">
                                 <!-- <a href="#" class="btn btn-outline-light btn-sm me-2">
                                     <i class="bi bi-eye"></i> Demo
@@ -511,7 +526,7 @@
                     <div class="project-card">
                         <div class="project-image">
                             <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?w=400&h=250&fit=crop" 
-                                 alt="Task Management App" class="img-fluid">
+                                 alt="Task Management App" class="img-fluid" loading="lazy">
                             <div class="project-overlay">
                                 <!-- <a href="#" class="btn btn-outline-light btn-sm me-2">
                                     <i class="bi bi-eye"></i> Demo
@@ -539,7 +554,7 @@
                     <div class="project-card">
                         <div class="project-image">
                             <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop" 
-                                 alt="Data Visualization Dashboard" class="img-fluid">
+                                 alt="Data Visualization Dashboard" class="img-fluid" loading="lazy">
                             <div class="project-overlay">
                                 <!-- <a href="#" class="btn btn-outline-light btn-sm me-2">
                                     <i class="bi bi-eye"></i> Demo
@@ -567,7 +582,7 @@
                     <div class="project-card">
                         <div class="project-image">
                             <img src="https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=400&h=250&fit=crop" 
-                                 alt="Restaurant Website" class="img-fluid">
+                                 alt="Restaurant Website" class="img-fluid" loading="lazy">
                             <div class="project-overlay">
                                 <!-- <a href="#" class="btn btn-outline-light btn-sm me-2">
                                     <i class="bi bi-eye"></i> Demo
@@ -594,7 +609,7 @@
                     <div class="project-card">
                         <div class="project-image">
                             <img src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=400&h=250&fit=crop" 
-                                 alt="Blog Platform" class="img-fluid">
+                                 alt="Blog Platform" class="img-fluid" loading="lazy">
                             <div class="project-overlay">
                                 <!-- <a href="#" class="btn btn-outline-light btn-sm me-2">
                                     <i class="bi bi-eye"></i> Demo
@@ -621,7 +636,7 @@
                     <div class="project-card">
                         <div class="project-image">
                             <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=250&fit=crop" 
-                                 alt="Mobile App UI" class="img-fluid">
+                                 alt="Mobile App UI" class="img-fluid" loading="lazy">
                             <div class="project-overlay">
                                 <!-- <a href="#" class="btn btn-outline-light btn-sm me-2">
                                     <i class="bi bi-eye"></i> Demo
@@ -751,6 +766,174 @@
     <button id="backToTop" class="back-to-top">
         <i class="bi bi-chevron-up"></i>
     </button>
+
+    <!-- Hidden CV Template for PDF Export -->
+    <div id="cv-template" class="cv-template" style="display: none;">
+        <div class="cv-container">
+            <!-- CV Header -->
+            <div class="cv-header">
+                <div class="cv-personal-info">
+                    <h1>I Putu Reksa Winda Perdana</h1>
+                    <p class="cv-title">Senior Full Stack Developer & Database Specialist</p>
+                    <div class="cv-contact">
+                        <div class="cv-contact-item">
+                            <i class="bi bi-envelope"></i>
+                            <span>reksaperdana43@gmail.com</span>
+                        </div>
+                        <div class="cv-contact-item">
+                            <i class="bi bi-phone"></i>
+                            <span>+62 851 6361 6942</span>
+                        </div>
+                        <div class="cv-contact-item">
+                            <i class="bi bi-geo-alt"></i>
+                            <span>Sidoarjo, East Java, Indonesia 61258</span>
+                        </div>
+                        <div class="cv-contact-item">
+                            <i class="bi bi-linkedin"></i>
+                            <span>linkedin.com/in/reksa-winda-2743a7255</span>
+                        </div>
+                        <div class="cv-contact-item">
+                            <i class="bi bi-github"></i>
+                            <span>github.com/windaperdana</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CV Summary -->
+            <div class="cv-section">
+                <h2>Professional Summary</h2>
+                <p>Passionate senior full stack developer and database specialist with 7+ years of experience in creating digital solutions. Expert in transitioning from monolithic systems to microservices, managing data flows between services using RabbitMQ, and optimizing data access speed with Redis. Proficient in complex data management with PostgreSQL, MySQL, and MongoDB. Specialized in real-time processing where data speed and accuracy are critical priorities.</p>
+            </div>
+
+            <!-- CV Skills -->
+            <div class="cv-section">
+                <h2>Technical Skills</h2>
+                <div class="cv-skills-grid">
+                    <div class="cv-skill-category">
+                        <h3>Frontend Development</h3>
+                        <p>HTML5, CSS3, JavaScript, React, Vue.js, Bootstrap, Tailwind CSS</p>
+                    </div>
+                    <div class="cv-skill-category">
+                        <h3>Backend Development</h3>
+                        <p>Node.js, PHP, Python, Golang, Express.js, Laravel, Java EE, Java Spring</p>
+                    </div>
+                    <div class="cv-skill-category">
+                        <h3>Databases</h3>
+                        <p>PostgreSQL, MySQL, MongoDB, Redis, BigQuery</p>
+                    </div>
+                    <div class="cv-skill-category">
+                        <h3>Tools & Technologies</h3>
+                        <p>Git, Docker, AWS, RabbitMQ, Socket.io, Figma, Photoshop, VS Code, Postman</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CV Experience -->
+            <div class="cv-section">
+                <h2>Work Experience</h2>
+                
+                <div class="cv-experience-item">
+                    <div class="cv-experience-header">
+                        <h3>Backend Developer</h3>
+                        <span class="cv-date">Nov 2020 - Nov 2025</span>
+                    </div>
+                    <div class="cv-company">PT. Global Unggul Mandiri (PAXEL), Jakarta, Indonesia</div>
+                    <p>Working on internal company systems as frontend and backend developer, using React Native for frontend and Golang for backend.</p>
+                    <ul>
+                        <li>Created Internal Courier project with Backend Golang, PostgreSQL and MongoDB</li>
+                        <li>Created Courier Incentive project with Backend Golang, MySQL and MongoDB</li>
+                    </ul>
+                    <div class="cv-tech">Technologies: Golang, React Native, PostgreSQL, MongoDB, MySQL</div>
+                </div>
+
+                <div class="cv-experience-item">
+                    <div class="cv-experience-header">
+                        <h3>Backend Developer</h3>
+                        <span class="cv-date">Jun 2023 - Jun 2024</span>
+                    </div>
+                    <div class="cv-company">RebelWorks, Jakarta, Indonesia</div>
+                    <p>Backend DBO project work using GoLang and Node.js.</p>
+                    <ul>
+                        <li>Created internal backoffice project with Backend Golang, Frontend Vue.js, MySQL database</li>
+                    </ul>
+                    <div class="cv-tech">Technologies: Golang, Node.js, Vue.js, MySQL</div>
+                </div>
+
+                <div class="cv-experience-item">
+                    <div class="cv-experience-header">
+                        <h3>Backend Developer</h3>
+                        <span class="cv-date">Feb 2019 - Oct 2020</span>
+                    </div>
+                    <div class="cv-company">PT. MING JAYA SEJAHTERA, Surabaya, Indonesia</div>
+                    <p>Backend development using GoLang programming language for system implementation.</p>
+                    <ul>
+                        <li>Created e-commerce backend service for jamtangan.com with Golang and MySQL</li>
+                    </ul>
+                    <div class="cv-tech">Technologies: Golang, MySQL</div>
+                </div>
+
+                <div class="cv-experience-item">
+                    <div class="cv-experience-header">
+                        <h3>Fullstack Developer</h3>
+                        <span class="cv-date">Jan 2017 - Sep 2019</span>
+                    </div>
+                    <div class="cv-company">PT. BIMASAKTI MULTI SINERGI, Sidoarjo, Indonesia</div>
+                    <p>Collaborated with frontend and backend teams to create social media platform (MyBeb). Used React JS and React Native for frontend, Node.js for backend, and Java EE/Servlet for core payment system.</p>
+                    <ul>
+                        <li>Created payment integration with banking system using Java Spring</li>
+                    </ul>
+                    <div class="cv-tech">Technologies: React JS, React Native, Node.js, Java EE, Java Spring</div>
+                </div>
+
+                <div class="cv-experience-item">
+                    <div class="cv-experience-header">
+                        <h3>Fullstack Developer</h3>
+                        <span class="cv-date">Jun 2016 - Sep 2017</span>
+                    </div>
+                    <div class="cv-company">PT. PADMATIRTA WISESA, Surabaya, Indonesia</div>
+                    <p>Created company reporting website using PHP CI and MySQL technology.</p>
+                    <div class="cv-tech">Technologies: PHP CI, MySQL</div>
+                </div>
+
+                <div class="cv-experience-item">
+                    <div class="cv-experience-header">
+                        <h3>Fullstack Developer</h3>
+                        <span class="cv-date">Nov 2015 - Sep 2016</span>
+                    </div>
+                    <div class="cv-company">PT. Cipurta Surya, Surabaya, Indonesia</div>
+                    <p>HRIS System Creation with PHP CI technology and MySQL database.</p>
+                    <div class="cv-tech">Technologies: PHP CI, MySQL</div>
+                </div>
+
+                <div class="cv-experience-item">
+                    <div class="cv-experience-header">
+                        <h3>Fullstack Developer</h3>
+                        <span class="cv-date">Sep 2013 - Nov 2015</span>
+                    </div>
+                    <div class="cv-company">PT Pharmindo Rimpang Kokoh, Denpasar, Indonesia</div>
+                    <p>HRIS System Development for Sanglah Hospital, Denpasar, using PHP CI technology and MySQL database.</p>
+                    <div class="cv-tech">Technologies: PHP CI, MySQL</div>
+                </div>
+            </div>
+
+            <!-- CV Stats -->
+            <div class="cv-section">
+                <h2>Key Achievements</h2>
+                <div class="cv-stats">
+                    <div class="cv-stat-item">
+                        <strong>10+</strong> Projects Completed
+                    </div>
+                    <div class="cv-stat-item">
+                        <strong>4+</strong> Happy Clients
+                    </div>
+                    <div class="cv-stat-item">
+                        <strong>7+</strong> Years Experience
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
