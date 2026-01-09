@@ -88,10 +88,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Typing animation for hero subtitle
     const heroSubtitle = document.querySelector('.hero-subtitle');
     const titles = [
-        'Full Stack Developer',
-        'UI/UX Designer',
-        'Frontend Specialist',
-        'Backend Developer'
+        // 'Full Stack Developer',
+        // 'UI/UX Designer',
+        // 'Frontend Specialist',
+        // 'Backend Developer'
     ];
     
     let currentTitleIndex = 0;
