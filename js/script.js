@@ -245,16 +245,25 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get the CV template
         const element = document.getElementById('cv-template');
         
+        // Create an invisible wrapper container inside the viewport bounds
+        // to prevent html2canvas from rendering a blank/clipped PDF due to offscreen rendering
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'fixed';
+        wrapper.style.top = '0';
+        wrapper.style.left = '0';
+        wrapper.style.width = '0';
+        wrapper.style.height = '0';
+        wrapper.style.overflow = 'hidden';
+        wrapper.style.zIndex = '-9999';
+        
         // Clone the element to avoid modifying the original
         const clonedElement = element.cloneNode(true);
         clonedElement.style.display = 'block';
-        clonedElement.style.position = 'absolute';
-        clonedElement.style.left = '-9999px';
-        clonedElement.style.top = '0';
         clonedElement.style.width = '210mm';
         
-        // Temporarily add to body for html2pdf
-        document.body.appendChild(clonedElement);
+        // Append clone to wrapper, and wrapper to body
+        wrapper.appendChild(clonedElement);
+        document.body.appendChild(wrapper);
         
         // Configure html2pdf options
         const opt = {
@@ -278,8 +287,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Generate PDF
         html2pdf().set(opt).from(clonedElement).save().then(function() {
-            // Remove cloned element
-            document.body.removeChild(clonedElement);
+            // Remove wrapper
+            if (document.body.contains(wrapper)) {
+                document.body.removeChild(wrapper);
+            }
             
             // Reset button state
             button.classList.remove('loading');
@@ -291,9 +302,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }).catch(function(error) {
             console.error('PDF generation error:', error);
             
-            // Remove cloned element
-            if (document.body.contains(clonedElement)) {
-                document.body.removeChild(clonedElement);
+            // Remove wrapper
+            if (document.body.contains(wrapper)) {
+                document.body.removeChild(wrapper);
             }
             
             // Reset button state
@@ -403,10 +414,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Typing animation for hero subtitle
     const heroSubtitle = document.querySelector('.hero-subtitle');
     const titles = [
-        // 'Full Stack Developer',
-        // 'UI/UX Designer',
-        // 'Frontend Specialist',
-        // 'Backend Developer'
+        'Senior Full Stack Developer',
+        'Database Specialist',
+        'Backend Engineer'
     ];
     
     let currentTitleIndex = 0;
