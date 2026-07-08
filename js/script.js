@@ -64,6 +64,172 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    function syncCVTemplateWithWeb() {
+        const cvTemplate = document.getElementById('cv-template');
+        if (!cvTemplate) return;
+
+        // 1. Sync Personal Info & Title
+        const heroTitle = document.querySelector('.hero-title .text-gradient');
+        const heroSubtitle = document.querySelector('.hero-subtitle');
+        const cvName = cvTemplate.querySelector('.cv-personal-info h1');
+        const cvTitle = cvTemplate.querySelector('.cv-personal-info .cv-title');
+        
+        if (heroTitle && cvName) cvName.textContent = heroTitle.textContent.trim();
+        if (heroSubtitle && cvTitle) cvTitle.textContent = heroSubtitle.textContent.trim();
+
+        // 2. Sync Contact Info
+        const contactItems = document.querySelectorAll('#contact .contact-item');
+        let email = '';
+        let phone = '';
+        let location = '';
+        
+        contactItems.forEach(item => {
+            const h5 = item.querySelector('h5');
+            const p = item.querySelector('p');
+            if (h5 && p) {
+                const type = h5.textContent.trim().toLowerCase();
+                const value = p.textContent.trim();
+                if (type.includes('email')) email = value;
+                else if (type.includes('phone')) phone = value;
+                else if (type.includes('location')) location = value;
+            }
+        });
+
+        const cvEmail = cvTemplate.querySelector('.cv-contact-item i.bi-envelope + span');
+        const cvPhone = cvTemplate.querySelector('.cv-contact-item i.bi-phone + span');
+        const cvLocation = cvTemplate.querySelector('.cv-contact-item i.bi-geo-alt + span');
+        
+        if (email && cvEmail) cvEmail.textContent = email;
+        if (phone && cvPhone) cvPhone.textContent = phone;
+        if (location && cvLocation) cvLocation.textContent = location;
+
+        // 3. Linkedin & Github
+        const footerLinks = document.querySelectorAll('footer .social-link');
+        let linkedin = '';
+        let github = '';
+        
+        footerLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href.includes('linkedin.com')) {
+                linkedin = href.replace(/^https?:\/\/(www\.)?/, '');
+            } else if (href.includes('github.com')) {
+                github = href.replace(/^https?:\/\/(www\.)?/, '');
+            }
+        });
+
+        const cvLinkedin = cvTemplate.querySelector('.cv-contact-item i.bi-linkedin + span');
+        const cvGithub = cvTemplate.querySelector('.cv-contact-item i.bi-github + span');
+        if (linkedin && cvLinkedin) cvLinkedin.textContent = linkedin;
+        if (github && cvGithub) cvGithub.textContent = github;
+
+        // 4. Professional Summary
+        const heroDesc = document.querySelector('.hero-description');
+        const sections = cvTemplate.querySelectorAll('.cv-section');
+        sections.forEach(sec => {
+            const h2 = sec.querySelector('h2');
+            if (h2 && h2.textContent.includes('Professional Summary')) {
+                const p = sec.querySelector('p');
+                if (p && heroDesc) p.textContent = heroDesc.textContent.trim();
+            }
+        });
+
+        // 5. Technical Skills
+        const skillCards = document.querySelectorAll('#skills .skill-card');
+        const cvSkillsGrid = cvTemplate.querySelector('.cv-skills-grid');
+        if (skillCards.length > 0 && cvSkillsGrid) {
+            cvSkillsGrid.innerHTML = '';
+            skillCards.forEach(card => {
+                const titleEl = card.querySelector('h4');
+                const tags = Array.from(card.querySelectorAll('.skill-tag')).map(t => t.textContent.trim());
+                if (titleEl && tags.length > 0) {
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'cv-skill-category';
+                    categoryDiv.innerHTML = `
+                        <h3>${titleEl.textContent.trim()}</h3>
+                        <p>${tags.join(', ')}</p>
+                    `;
+                    cvSkillsGrid.appendChild(categoryDiv);
+                }
+            });
+        }
+
+        // 6. Work Experience
+        const experienceCards = document.querySelectorAll('#experience .experience-card');
+        let cvExperienceSection = null;
+        sections.forEach(sec => {
+            const h2 = sec.querySelector('h2');
+            if (h2 && h2.textContent.includes('Work Experience')) {
+                cvExperienceSection = sec;
+            }
+        });
+
+        if (experienceCards.length > 0 && cvExperienceSection) {
+            const heading = cvExperienceSection.querySelector('h2');
+            cvExperienceSection.innerHTML = '';
+            if (heading) cvExperienceSection.appendChild(heading);
+
+            experienceCards.forEach(card => {
+                const dateRange = card.querySelector('.date-range') ? card.querySelector('.date-range').textContent.trim() : '';
+                const position = card.querySelector('.position-title') ? card.querySelector('.position-title').textContent.trim() : '';
+                const company = card.querySelector('.company-name') ? card.querySelector('.company-name').textContent.trim() : '';
+                const description = card.querySelector('.experience-description') ? card.querySelector('.experience-description').textContent.trim() : '';
+                
+                const achievements = Array.from(card.querySelectorAll('.achievement-list li')).map(li => li.textContent.trim());
+                const techTags = Array.from(card.querySelectorAll('.tech-stack .tech-tag')).map(t => t.textContent.trim());
+
+                const expItem = document.createElement('div');
+                expItem.className = 'cv-experience-item';
+                
+                let achievementsHtml = '';
+                if (achievements.length > 0) {
+                    achievementsHtml = `
+                        <ul>
+                            ${achievements.map(a => `<li>${a}</li>`).join('')}
+                        </ul>
+                    `;
+                }
+
+                let techHtml = '';
+                if (techTags.length > 0) {
+                    techHtml = `
+                        <div class="cv-tech">Technologies: ${techTags.join(', ')}</div>
+                    `;
+                }
+
+                expItem.innerHTML = `
+                    <div class="cv-experience-header">
+                        <h3>${position}</h3>
+                        <span class="cv-date">${dateRange}</span>
+                    </div>
+                    <div class="cv-company">${company}</div>
+                    <p>${description}</p>
+                    ${achievementsHtml}
+                    ${techHtml}
+                `;
+                cvExperienceSection.appendChild(expItem);
+            });
+        }
+
+        // 7. Stats
+        const statsElements = document.querySelectorAll('#about .stats-row .stat-item');
+        const cvStatsSection = cvTemplate.querySelector('.cv-stats');
+        if (statsElements.length > 0 && cvStatsSection) {
+            cvStatsSection.innerHTML = '';
+            statsElements.forEach(stat => {
+                const num = stat.querySelector('.stat-number') ? stat.querySelector('.stat-number').textContent.trim() : '';
+                const label = stat.querySelector('.stat-label') ? stat.querySelector('.stat-label').textContent.trim() : '';
+                if (num && label) {
+                    const cvStatItem = document.createElement('div');
+                    cvStatItem.className = 'cv-stat-item';
+                    cvStatItem.innerHTML = `
+                        <strong>${num}</strong> ${label}
+                    `;
+                    cvStatsSection.appendChild(cvStatItem);
+                }
+            });
+        }
+    }
+
     function exportToPDF() {
         const button = document.getElementById('exportCV');
         const buttonText = button.innerHTML;
@@ -73,19 +239,26 @@ document.addEventListener('DOMContentLoaded', function() {
         button.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Generating...';
         button.disabled = true;
         
+        // Synchronize the template content with the web UI content first
+        syncCVTemplateWithWeb();
+
         // Get the CV template
         const element = document.getElementById('cv-template');
         
         // Clone the element to avoid modifying the original
         const clonedElement = element.cloneNode(true);
         clonedElement.style.display = 'block';
+        clonedElement.style.position = 'absolute';
+        clonedElement.style.left = '-9999px';
+        clonedElement.style.top = '0';
+        clonedElement.style.width = '210mm';
         
         // Temporarily add to body for html2pdf
         document.body.appendChild(clonedElement);
         
         // Configure html2pdf options
         const opt = {
-            margin: [0.5, 0.5, 0.5, 0.5], // top, left, bottom, right (in inches)
+            margin: [0.4, 0.4, 0.4, 0.4], // top, left, bottom, right (in inches)
             filename: 'I PUTU REKSA WINDA PERDANA - Resume.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { 
